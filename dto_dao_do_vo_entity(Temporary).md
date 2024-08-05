@@ -19,9 +19,15 @@ DTO는 일반적으로 데이터를 보유하기 위한 필드들과 이를 접�
 ```
 데이터베이스와의 상호작용을 추상화하고 데이터베이스에 접근하는 데 사용된다.
 DAO는 주로 CRUD(Create, Read, Update, Delete) 연산을 수행하는 메서드들을 포함한다.
-스프링부트에서는 DAO는 주로 Repository 인터페이스로 정의되며,
-Spring Data JPA 또는 JDBC 등의 기술을 사용하여 구현된다.
+
+* 밑에 표를 참고하여 패키지명 분류를 참고 (일반적으로 많이 쓰이는 패키지 분류)
+* Mybatis를 사용하는 프로젝트는 dao 패키지에 model, mapper를 넣어 분류하는 경우도 많음
+* JPA를 사용하는 프로젝트는 domain 패키지에 entity, repository를 넣어 분류하는 경우가 많음
 ```
+||Package(JPA)|Mybatis|JPA|
+|-|-|-|-|
+|Table|model or dao(entity)|DAO(UserDAO)|Entity(User)|
+|Repository|dao(repository)|Mapper(UserMapper)|Repository(UserRepository)|
 
 <br /><br /><br />
 
@@ -37,19 +43,19 @@ Spring Data JPA 또는 JDBC 등의 기술을 사용하여 구현된다.
 VO는 비즈니스 로직에서 값의 단위로 사용.
 ```
 ```
-불변성(Immutable)
+1) 불변성(Immutable)
 
 값을 가지고 있지만 한 번 생성되면 내부 상태가 변경되지 않는다.
 이는 객체의 상태를 안정적으로 유지하고 예측 가능하게 만든다.
-```
-```
-Equality(동등성)
+
+
+2) Equality(동등성)
 
 Value Object는 내용이 같으면 동등하다고 간주.
 즉, 값이 같으면 같은 객체로 취급된다.
-```
-```
-Identity(식별성)이 없음
+
+
+3)Identity(식별성)이 없음
 
 Value Object는 주로 값 자체가 중요한 경우에 사용.
 객체가 고유하게 식별되지 않고 값만으로 비교되는 경우가 많다.
