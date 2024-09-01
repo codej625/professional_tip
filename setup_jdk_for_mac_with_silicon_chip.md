@@ -2,7 +2,13 @@
 
 <br /><br />
 
-1. zsh를 설치하기 위해 brew를 설치한다.(zsh는 자바가 설치되어 있지 않으면 설치되지 않는데, 자바를 쉽게 설치하려면 zsh가 필요하다.)
+```
+* 여기서는 brew, zsh, jdk, 환경변수 설정을 다룬다.
+```
+
+<br /><br /><br />
+
+1. zsh를 설치하기 위해 brew를 설치한다. (zsh는 자바가 설치되어 있지 않으면 설치되지 않는데, 자바를 쉽게 설치하려면 zsh가 필요하다.)
 
 ```
 // terminal에 밑에 script를 입력한다.
@@ -15,13 +21,15 @@
 2. brew가 설치 됬다면, zsh를 설치한다.
 
 ```
+// 1) zsh 설치
 
 brew install zsh
-
 ```
 
+<br />
+
 ```
-// brew install oh-my-zsh(확장팩) 설치
+// 2) oh-my-zsh(확장팩) 설치
 
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 ```
@@ -35,6 +43,8 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/mas
 
 https://www.azul.com/downloads/?version=java-11-lts&os=macos&architecture=arm-64-bit&package=jdk#zulu
 ```
+
+<br />
 
 ```
 // JDK를 삭제하고 싶다면 밑에 url을 참고
@@ -62,6 +72,8 @@ terminal에 "java --version"을 실행하면 자바 버전이 출력된다.
 cd /Library/Java/JavaVirtualMachines
 ```
 
+<br />
+
 ```
 // 이제 ls와 cd를 통해 밑에와 같이 Home의 경로를 찾으면 된다.
 
@@ -79,6 +91,8 @@ cd /Library/Java/JavaVirtualMachines
 vim ~/.zshrc
 ```
 
+<br />
+
 ```
 // "i"를 눌러 Insert 모드로 전환 후 가장 아래에 밑과 같이 입력한다.(위에서 찾은 경로를 입력)
 
@@ -87,11 +101,15 @@ export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home
 export PATH=${PATH}:$JAVA_HOME/bin
 ```
 
+<br />
+
 ```
 // "esc"를 누르고 :wq를 입력 후 빠져나온다. 변경 사항을 적용하기 위해 밑에 스크립트를 입력한다.
 
 source ~/.zshrc
 ```
+
+<br />
 
 ```
 // 최종 확인
