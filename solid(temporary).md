@@ -60,20 +60,6 @@ public class UserManager {
 <br />
 
 ```java
-public class User {
-    private String username;
-    private String password;
-
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-}
-
 public class UserService {
     public User createUser(String username, String password) {
         // 사용자 생성 로직
@@ -89,10 +75,27 @@ public class EmailService {
     }
 }
 
-public class ActivityLogger {
-    public void logActivity(String activity) {
-        // 활동 기록 로직
-        System.out.println("Logging activity: " + activity);
+public class Report {
+    private String title;
+    private String content;
+
+    public Report(String title) {
+        this.title = title;
+        this.content = "";
+    }
+
+    // 여러개의 메서드가 하나의 책임을 완성
+    public void addContent(String newContent) {
+        this.content += newContent;
+    }
+
+    public void printReport() {
+        System.out.println("Title: " + title);
+        System.out.println("Content: " + content);
+    }
+
+    public void saveToFile(String filePath) {
+        // 파일에 보고서 저장하는 로직
     }
 }
 ```
@@ -240,7 +243,8 @@ public class XMLReport implement Report {
 ---
 
 ```
-
+클래스는 자신이 사용하지 않을 메서드를
+구현하도록 강요받지 말아야 한다는 원칙이다.
 ```
 
 <br /><br />
@@ -250,13 +254,50 @@ public class XMLReport implement Report {
 <br />
 
 ```java
+// 공장 노동자들에게 적용하기 위한 'Worker' 인터페이스
+public interface Worker {
+    void work();
+    void eat();
+}
 
+// 사람인 일반 직원은 이 두 메서드를 모두 수행하므로 문제가 없다.
+public class Employee implements Worker {
+
+    @Override
+    public void work() {
+        System.out.println("Employee is working");
+    }
+
+    @Override
+    public void eat() {
+        System.out.println("Employee is eating");
+    }
+
+}
+
+// 반면 똑같은 구현체지만 로봇은 식사하지 않기 때문에 eat() 메서드가 필요 없다.
+public class Robot implements Worker {
+
+    @Override
+    public void work() {
+        System.out.println("Robot is working");
+    }
+
+    @Override
+    public void eat() {
+        // Robots do not eat
+        throw new UnsupportedOperationException("Robots do not eat");
+    }
+
+}
 ```
 
 <br />
 
 ```
-
+위에서는 하나의 인터페이스를 구현할 때 클래스마다
+사용하지 않는 메서드를 구현해야 하는 상황이 존재한다.
+이렇게 되면 ISP 원칙을 위반하는 것이다.
 ```
 
 <br /><br />
@@ -266,13 +307,42 @@ public class XMLReport implement Report {
 <br />
 
 ```java
+// 인터페이스를 메서드마다 조금 더 상세히 분류한다.
+public interface Workable {
+    void work();
+}
 
+public interface Eatable {
+    void eat();
+}
+
+public class Employee implements Workable, Eatable {
+
+    @Override
+    public void work() {
+        System.out.println("Employee is working");
+    }
+
+    @Override
+    public void eat() {
+        System.out.println("Employee is eating");
+    }
+
+}
+
+public class Robot implements Workable {
+    @Override
+    public void work() {
+        System.out.println("Robot is working");
+    }
+}
 ```
 
 <br />
 
 ```
-
+인터페이스를 조금 더 상세히 구분해서
+일반 직원은 두 인터페이스 모두를, 로봇은 Workable만 적용하도록 수정하였다.
 ```
 
 <br /><br /><br />
