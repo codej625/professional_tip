@@ -1,6 +1,7 @@
 # 데이터 전달의 사용되는 여러 객체를 알아보자.
 
-<br /><br />
+<br />
+<br />
 
 1. DTO(Data Transfer Object)
 
@@ -12,7 +13,9 @@ DTO는 일반적으로 데이터를 보유하기 위한 필드들과 이를 접�
 (상세 분류 시 Request / Response 으로 분류가 가능하다.)
 ```
 
-<br /><br /><br />
+<br />
+<br />
+<br />
 
 2. DAO (Data Access Object)
 
@@ -24,12 +27,15 @@ DAO는 주로 CRUD(Create, Read, Update, Delete) 연산을 수행하는 메서�
 * Mybatis를 사용하는 프로젝트는 dao 패키지에 model, mapper를 넣어 분류하는 경우도 많음
 * JPA를 사용하는 프로젝트는 domain 패키지에 entity, repository를 넣어 분류하는 경우가 많음
 ```
+
 ||Package(JPA)|Mybatis|JPA|
 |-|-|-|-|
 |Table|model or dao(entity)|DAO(UserDAO)|Entity(User)|
 |Repository|dao(repository)|Mapper(UserMapper)|Repository(UserRepository)|
 
-<br /><br /><br />
+<br />
+<br />
+<br />
 
 3. VO(Value Object)
 
@@ -42,6 +48,7 @@ DAO는 주로 CRUD(Create, Read, Update, Delete) 연산을 수행하는 메서�
 데이터 전달 객체(Data Transfer Object, DTO)와 유사하지만,
 VO는 비즈니스 로직에서 값의 단위로 사용.
 ```
+
 ```
 1) 불변성(Immutable)
 
@@ -61,7 +68,9 @@ Value Object는 주로 값 자체가 중요한 경우에 사용.
 객체가 고유하게 식별되지 않고 값만으로 비교되는 경우가 많다.
 ```
 
-<br /><br /><br />
+<br />
+<br />
+<br />
 
 4. Entity
 
