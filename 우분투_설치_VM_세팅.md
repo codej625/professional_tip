@@ -24,11 +24,14 @@ Ubuntu Server는 네트워크 및 서비스 맞춤 Linux 배포판이다.
 ```zsh
 # 운영체제 설치 완료 시 아래를 차례대로 실행
 
-sudo apt update && sudo apt upgrade -y # 최신 패키지와 보안 업데이트를 설치
+# 최신 패키지와 보안 업데이트를 설치
+sudo apt update && sudo apt upgrade -y
 
-sudo apt install openssh-server -y # OpenSSH 서버
+# OpenSSH 서버
+sudo apt install openssh-server -y
 
-sudo apt install ibus-hangul # 한글 입력기 설치
+# 한글 입력기 설치
+sudo apt install ibus-hangul
 ```
 
 <br />
@@ -70,21 +73,30 @@ sudo ufw status
 최소한의 보안 설정을 해두는 것이 좋다.
 ```
 
-```zsh
-# 설정 파일 열기
-sudo vim /etc/ssh/sshd_config
+<br />
 
+`sudo vim /etc/ssh/sshd_config`
+
+```zsh
 # Root 로그인 차단
-# PermitRootLogin no (반드시 일반 유저 생성 후 sudo를 사용)
+PermitRootLogin no (반드시 일반 유저 생성 후 sudo를 사용)
+
 # 비밀번호 로그인 차단 (SSH Key 방식 사용 시)
-# PasswordAuthentication no
+PasswordAuthentication no
+
 # (선택) 포트 변경: Port 22
-# Port 2222 등으로 변경 (스캔 공격 회피용)
+Port 2222 등으로 변경 (스캔 공격 회피용)
 ```
 
 ```zsh
+# 문법 오류 검사 (아무 내용 안 나오면 정상)
+sudo sshd -t
+
 # SSH 서비스 재시작
 sudo systemctl restart ssh
+
+# 포트 지정 접속 테스트 (새 터미널에서 확인)
+ssh -p 2222 계정명@서버IP
 ```
 
 <br />
@@ -134,18 +146,23 @@ echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 ```zsh
 sudo apt update
 
-sudo apt install git curl zsh -y # git, curl, zsh 설치
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" # Oh My Zsh 설치
+# git, curl, zsh 설치
+sudo apt install git curl zsh -y
+
+# Oh My Zsh 설치
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
 
-```
-설치가 끝나면 프롬프트 모양이 바뀐다.
+```zsh
+# 설치가 끝나면 프롬프트 모양이 바뀐다.
 
-만약 바뀌지 않았다면 로그아웃 후 다시 로그인하거나 아래 명령어를 입력한다.
+# 만약 바뀌지 않았다면 로그아웃 후 다시 로그인하거나 아래 명령어를 입력한다.
 
-zsh # zsh로 바로 진입
+# zsh로 바로 진입
+zsh
 
-echo $SHELL # 현재 쉘이 zsh인지 확인
+# 현재 쉘이 zsh인지 확인
+echo $SHELL
 ```
 
 ```zsh
@@ -156,10 +173,13 @@ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-m
 
 # zsh-syntax-highlighting (명령어 오타 나면 빨간색으로 표시)
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+```
 
-# 설정 파일 적용
-vi ~/.zshrc # .zshrc 파일을 열어서 플러그인 목록에 추가해야 한다.
+<br />
 
+`vi ~/.zshrc # 설정 파일 적용`
+
+```vim
 # 파일 내용 중 plugins=(git) 이라고 되어 있는 부분을 찾아서 아래처럼 괄호 안에 추가한다.
 # 수정 전
 plugins=(git)
@@ -172,4 +192,48 @@ plugins=(
 )
 
 source ~/.zshrc # 변경 사항 반영
+```
+
+<br />
+<br />
+<br />
+
+7. 아이피 고정
+
+```
+마지막으로,
+아이피의 변경을 막기 위해 아이피를 고정해야 한다.
+```
+
+<br />
+
+`sudo vim /etc/netplan/50-cloud-init.yaml`
+
+```vim
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    eth0:
+      dhcp4: no # DHCP를 사용하지 않고 고정 IP를 사용하도록 지정
+      addresses: [192.168.0.201/24] # 이 VM의 고정 IP 주소는 **192.168.0.201**이고, 서브넷 마스크는 /24이다.
+      routes:
+        - to: default
+          via: 192.168.0.1 # 외부로 나가는 모든 트래픽의 기본 경로(게이트웨이)는 **192.168.0.1**로 지정.
+      nameservers:
+        addresses: [8.8.8.8, 168.126.63.1]
+```
+
+```zsh
+# 적용 확인을 위해 명령어 입력
+sudo netplan apply
+
+# eth0 인터페이스에 192.168.0.201/24 주소가 표시되는지 확인
+ip a
+
+# 게이트웨이와 DNS 설정이 올바르게 작동하여 외부 인터넷에 접속할 수 있어야 한다.
+ping 8.8.8.8
+
+# 모든 VM이 서로 통신할 수 있어야 한다. (예를 들어, k3s-master-2에서 k3s-master-1으로 핑 테스트를 필요)
+ping 192.168.0.200
 ```
