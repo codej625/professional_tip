@@ -209,7 +209,7 @@ source ~/.zshrc # 변경 사항 반영
 
 `sudo vim /etc/netplan/50-cloud-init.yaml`
 
-```vim
+```yaml
 network:
   version: 2
   renderer: networkd
