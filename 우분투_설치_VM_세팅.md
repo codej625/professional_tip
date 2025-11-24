@@ -8,10 +8,12 @@
 ---
 
 ```
-Ubuntu 24.04 LTS(Long Term Support)는 5년간 지원을 제공하는 Ubuntu의 최신 LTS 버전으로,
-안정적이고 보안이 강화된 서버 운영체제를 제공한다.
+설치 예시로 사용할 Ubuntu 24.04 LTS(Long Term Support)는
+5년간 지원을 제공하는 Ubuntu의 최신 LTS 버전으로, 안정적이고 보안이 강화된 서버 운영체제를 제공한다.
 
 Ubuntu Server는 네트워크 및 서비스 맞춤 Linux 배포판이다.
+
+GUI가 없어서 가볍고 용량이 작다는 장점이 있다.
 ```
 
 <br />
