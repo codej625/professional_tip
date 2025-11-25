@@ -151,18 +151,14 @@ sudo apt update
 # git, curl, zsh 설치
 sudo apt install git curl zsh -y
 
+# Zsh를 현재 사용자의 기본 쉘로 변경
+chsh -s $(which zsh)
+
 # Oh My Zsh 설치
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
 
 ```zsh
-# 설치가 끝나면 프롬프트 모양이 바뀐다.
-
-# 만약 바뀌지 않았다면 로그아웃 후 다시 로그인하거나 아래 명령어를 입력한다.
-
-# zsh로 바로 진입
-zsh
-
 # 현재 쉘이 zsh인지 확인
 echo $SHELL
 ```
@@ -183,6 +179,7 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:
 
 ```vim
 # 파일 내용 중 plugins=(git) 이라고 되어 있는 부분을 찾아서 아래처럼 괄호 안에 추가한다.
+
 # 수정 전
 plugins=(git)
 
@@ -192,8 +189,11 @@ plugins=(
     zsh-autosuggestions
     zsh-syntax-highlighting
 )
+```
 
-source ~/.zshrc # 변경 사항 반영
+```zsh
+# 변경 사항 반영
+source ~/.zshrc
 ```
 
 <br />
