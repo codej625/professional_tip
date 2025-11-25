@@ -79,7 +79,7 @@ sudo ufw status
 
 `sudo vim /etc/ssh/sshd_config`
 
-```zsh
+```
 # Root 로그인 차단
 PermitRootLogin no (반드시 일반 유저 생성 후 sudo를 사용)
 
@@ -238,4 +238,41 @@ ping 8.8.8.8
 
 # 모든 VM이 서로 통신할 수 있어야 한다. (예를 들어, k3s-master-2에서 k3s-master-1으로 핑 테스트를 필요)
 ping 192.168.0.200
+```
+
+<br />
+<br />
+<br />
+
+8. k3s 설치 (옵션)
+
+```zsh
+# K3s를 설치하고 시스템 서비스로 등록하며, kubectl 등의 도구를 함께 설치
+curl -sfL https://get.k3s.io | sh -
+
+# 설치 확인
+sudo kubectl get nodes
+```
+
+<br />
+
+```
+sudo 없이 현재 사용자 계정으로,
+kubectl 명령어를 편리하게 사용하기 위한 설정하기
+```
+
+```zsh
+# K3s의 설정 파일을 현재 사용자의 .kube 디렉토리에 복사하여 기본 설정 파일로 사용
+mkdir -p ~/.kube
+sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
+
+# 복사한 설정 파일의 소유권을 현재 사용자로 변경하고, 권한을 조정
+sudo chown $(id -u):$(id -g) ~/.kube/config
+chmod 600 ~/.kube/config
+
+# KUBECONFIG 환경 변수를 .zshrc에 영구 추가 (Zsh)
+echo 'export KUBECONFIG=$HOME/.kube/config' >> ~/.zshrc
+
+# 변경 사항 즉시 적용 추가한 내용을 현재 Zsh 세션에 바로 적용
+source ~/.zshrc
 ```
