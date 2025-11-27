@@ -55,7 +55,7 @@ sudo apt install ibus-hangul
 # SSH 포트 허용 (기본 22번)
 sudo ufw allow ssh
 
-# (옵션) 웹서버를 돌릴 거라면
+# 웹서버를 돌릴 거라면 (선택)
 # sudo ufw allow 80/tcp  # HTTP
 # sudo ufw allow 443/tcp # HTTPS
 
@@ -97,8 +97,17 @@ Port 2222 등으로 변경 (스캔 공격 회피용)
 # 문법 오류 검사 (아무 내용 안 나오면 정상)
 sudo sshd -t
 
+# 서비스가 부팅 시 자동으로 시작되도록 설정 (선택)
+sudo systemctl enable ssh
+
 # SSH 서비스 재시작
 sudo systemctl restart ssh
+
+# 상태 확인
+sudo systemctl status ssh
+
+# 서비스를 지금 즉시 시작 (서비스가 시작되지 않았다면)
+sudo systemctl start ssh
 
 # 포트 지정 접속 테스트 (새 터미널에서 확인)
 ssh -p 2222 계정명@서버IP
