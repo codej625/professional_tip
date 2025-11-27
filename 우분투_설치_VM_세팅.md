@@ -29,6 +29,9 @@ GUI가 없어서 가볍고 용량이 작다는 장점이 있다.
 # 최신 패키지와 보안 업데이트를 설치
 sudo apt update && sudo apt upgrade -y
 
+# 업데이트가 성공적으로 끝났다면 재부팅이 필요
+sudo reboot
+
 # OpenSSH 서버
 sudo apt install openssh-server -y
 
