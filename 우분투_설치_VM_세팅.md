@@ -118,6 +118,9 @@ ssh -p 2222 계정명@서버IP
 ```zsh
 # 설치만 해도 기본 설정(SSH 5회 실패 시 10분 차단 등)이 적용되어 바로 작동한다.
 sudo apt install fail2ban -y
+
+# fail2ban이 잘 실행되고 있는지 확인
+sudo systemctl status fail2ban
 ```
 
 <br />
