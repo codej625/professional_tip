@@ -145,9 +145,17 @@ sudo systemctl status fail2ban
 
 ```zsh
 # 2GB 스왑 파일 생성 예시
+
+# 파티션 내부에 $2\text{G}$ 크기의 빈 파일(swapfile)을 만든다.
 sudo fallocate -l 2G /swapfile
+
+# 보안을 위해 파일 접근 권한을 루트 사용자만 읽고 쓰기 가능하도록 설정
 sudo chmod 600 /swapfile
+
+# 해당 파일을 스왑 영역으로 사용할 수 있도록 포맷
 sudo mkswap /swapfile
+
+# 시스템에 스왑 영역으로 즉시 등록하여 사용을 시작한다.
 sudo swapon /swapfile
 
 # 재부팅 후에도 유지되도록 fstab 등록
