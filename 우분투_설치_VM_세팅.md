@@ -160,6 +160,9 @@ sudo swapon /swapfile
 
 # 재부팅 후에도 유지되도록 fstab 등록
 echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+
+# 메모리 상태 확인
+free -h
 ```
 
 <br />
