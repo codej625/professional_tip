@@ -144,8 +144,10 @@ sudo systemctl status fail2ban
 ```
 
 ```zsh
-# 2GB 스왑 파일 생성 예시
+# VM같은 경우 자동으로 리눅스에서 스왑을 만들기도 하므로 확인한다.
+cat /proc/swaps
 
+# 2GB 스왑 파일 생성 예시
 # 파티션 내부에 $2\text{G}$ 크기의 빈 파일(swapfile)을 만든다.
 sudo fallocate -l 2G /swapfile
 
