@@ -55,7 +55,7 @@ width/height를 안 주면 브라우저마다 다르지만, 보통 300×150px �
 
 ```html
 <div style="max-width: 800px; width: 100%; margin: 0 auto;">
-  <div style="position: relative; width: 100%; height: 0;">
+  <div style="position: relative; width: 100%; height: 0; padding-bottom: 56.25%;"><!-- 비율 16:9 유지 -->
     <iframe 
       style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
       src="https://www.youtube.com/embed/oPTuGyWizSM?autoplay=1&mute=1&loop=1&playlist=oPTuGyWizSM&playsinline=1" 
