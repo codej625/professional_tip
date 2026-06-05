@@ -193,12 +193,13 @@ usermod -aG sudo dev
 
 # SSH 설정 (root 허용 + dev 계정도 허용)
 cat >> /etc/ssh/sshd_config << EOF
-
 Port 8023
 PermitRootLogin yes
 PasswordAuthentication yes
 AllowUsers root dev
+UsePAM no
 EOF
+
 
 # HostKey 생성
 ssh-keygen -A
