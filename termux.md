@@ -94,6 +94,9 @@ adb shell "settings get global settings_enable_monitor_phantom_procs"
 # 기본 세팅
 pkg update && pkg upgrade -y
 pkg install -y openssh
+
+# Android 내부 저장소(파일)에 Termux가 접근할 수 있게 권한 부여
+termux-setup-storage
 ```
 
 ```zsh
@@ -106,4 +109,71 @@ passwd
 ```zsh
 # sshd 실행
 sshd
+```
+
+```zsh
+# git 설치
+pkg install -y zsh git curl
+
+# git 버전 확인
+git --version
+
+# git config 설정
+user.name  = codej625
+user.email = codej625@gmail.com
+
+# git config 내용 확인
+git config --global --list
+```
+
+```zsh
+# zsh 설치
+pkg install -y zsh
+
+# 기본 셸 zsh로 변경
+chsh -s zsh
+
+# Termux 재시작 (zsh 적용)
+# 이후 뭔가 선택 하는게 나오면 0번 선택 (~/.zshrc 생성)
+
+# oh-my-zsh 설치
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+# shell 확인
+echo $SHELL
+
+# zsh 버전 확인
+zsh --version
+```
+
+```zsh
+# 빌드 도구 (bcrypt 등 네이티브 모듈용) 설치
+pkg install -y clang make cmake openssl
+```
+
+```zsh
+# nvm 설치
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+
+# nvm 설치 적용
+source ~/.zshrc
+
+# PREFIX 문제 해결 (Termux 전용)
+echo 'unset PREFIX' >> ~/.zshrc
+source ~/.zshrc
+
+# 노드 LTS 설치
+nvm install --lts
+
+# 노드, nvm 버전 확인
+node -v
+nvm ls
+
+# 확인한 버전을 default로 지정 (선택)
+nvm alias default 22 # 확인한 버전 번호로
+```
+
+```zsh
+# 기타 설치
+pkg install -y curl wget vim python
 ```
