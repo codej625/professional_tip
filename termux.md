@@ -112,38 +112,60 @@ sshd
 ```
 
 ```zsh
+# zsh 설치
+pkg install -y zsh
+chsh -s zsh
+
+# Termux 재시작 → 선택화면 나오면 0번 (~/.zshrc 생성)
+
+# oh-my-zsh 설치
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+echo $SHELL
+zsh --version
+```
+
+```zsh
+# nvm 설치
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+
+cat > ~/.zshrc << 'EOF'
+unset PREFIX
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="robbyrussell"
+plugins=(git)
+source $ZSH/oh-my-zsh.sh
+EOF
+
+# 설치 적용
+source ~/.zshrc
+
+# PREFIX 해제
+unset PREFIX
+
+# 노드 LTS 설치
+nvm install --lts
+
+# 버전 확인
+node -v
+npm -v
+```
+
+```zsh
 # git 설치
-pkg install -y zsh git curl
+pkg install -y git curl
 
 # git 버전 확인
 git --version
 
 # git config 설정
-user.name  = codej625
-user.email = codej625@gmail.com
+git config --global user.name "codej625"
+git config --global user.email "codej625@gmail.com"
 
 # git config 내용 확인
 git config --global --list
-```
-
-```zsh
-# zsh 설치
-pkg install -y zsh
-
-# 기본 셸 zsh로 변경
-chsh -s zsh
-
-# Termux 재시작 (zsh 적용)
-# 이후 뭔가 선택 하는게 나오면 0번 선택 (~/.zshrc 생성)
-
-# oh-my-zsh 설치
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
-# shell 확인
-echo $SHELL
-
-# zsh 버전 확인
-zsh --version
 ```
 
 ```zsh
@@ -152,28 +174,6 @@ pkg install -y clang make cmake openssl
 ```
 
 ```zsh
-# nvm 설치
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-
-# nvm 설치 적용
-source ~/.zshrc
-
-# PREFIX 문제 해결 (Termux 전용)
-echo 'unset PREFIX' >> ~/.zshrc
-source ~/.zshrc
-
-# 노드 LTS 설치
-nvm install --lts
-
-# 노드, nvm 버전 확인
-node -v
-nvm ls
-
-# 확인한 버전을 default로 지정 (선택)
-nvm alias default 22 # 확인한 버전 번호로
-```
-
-```zsh
 # 기타 설치
-pkg install -y curl wget vim python
+pkg install -y wget vim python
 ```
