@@ -83,3 +83,27 @@ adb shell "device_config get activity_manager max_phantom_processes"
 adb shell "settings get global settings_enable_monitor_phantom_procs"
 # 출력값 false 나오면 성공
 ```
+
+<br />
+<br />
+<br />
+
+3. 초기 설정
+
+```zsh
+# 기본 세팅
+pkg update && pkg upgrade -y
+pkg install -y openssh
+```
+
+```zsh
+# 비밀번호 설정
+passwd
+# New password: 원하는비밀번호 입력
+# Retype new password: 재입력
+```
+
+```zsh
+# sshd 실행
+sshd
+```
