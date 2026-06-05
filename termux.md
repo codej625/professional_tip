@@ -88,31 +88,28 @@ adb shell "settings get global settings_enable_monitor_phantom_procs"
 <br />
 <br />
 
-3. 초기 설정
+4. Termux 초기 설정
+
+```
+Termux는 proot Ubuntu를 실행하기 위한 부트스트랩 역할만 한다.
+
+git, node, nvm 등 개발 도구는 Termux가 아니라 Ubuntu 안에 설치한다.
+
+Termux openssh는 패키지 의존성으로 함께 설치되지만,
+Cursor 연결에는 사용하지 않는다. (Ubuntu sshd가 담당)
+```
 
 ```zsh
 # 기본 세팅
 pkg update && pkg upgrade -y
-pkg install -y openssh
+pkg install -y openssh proot-distro
 
 # Android 내부 저장소(파일)에 Termux가 접근할 수 있게 권한 부여
 termux-setup-storage
 ```
 
 ```zsh
-# 비밀번호 설정
-passwd
-# New password: 원하는비밀번호 입력
-# Retype new password: 재입력
-```
-
-```zsh
-# sshd 실행
-sshd
-```
-
-```zsh
-# zsh 설치
+# zsh 설치 (Termux 터미널용)
 pkg install -y zsh
 chsh -s zsh
 
@@ -120,45 +117,101 @@ chsh -s zsh
 
 # oh-my-zsh 설치
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-echo $SHELL
-zsh --version
+```
+
+<br />
+<br />
+<br />
+
+5. proot Ubuntu 설치
+
+```
+Cursor Remote SSH는 glibc 기반 바이너리를 사용한다.
+
+Termux는 Android의 bionic libc를 사용하기 때문에 직접 연결이 불가능하다.
+
+Termux에 SSH로 붙으면 비밀번호 입력 후 무한 로딩이 걸리는 것이 정상이다.
+
+proot-distro로 Ubuntu 환경을 만들어 이 문제를 해결한다.
 ```
 
 ```zsh
-# nvm 설치
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+# Ubuntu 설치
+proot-distro install ubuntu
 
-cat > ~/.zshrc << 'EOF'
-unset PREFIX
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-export ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME="robbyrussell"
-plugins=(git)
-source $ZSH/oh-my-zsh.sh
-EOF
+# Ubuntu 진입
+proot-distro login ubuntu
+```
 
-# 설치 적용
-source ~/.zshrc
+<br />
+<br />
+<br />
 
-# PREFIX 해제
-unset PREFIX
+6. Ubuntu 초기 설정
 
-# 노드 LTS 설치
-nvm install --lts
+```
+최초 1회만 root로 진행한다.
 
-# 버전 확인
-node -v
-npm -v
+SSH 서버 설정, 사용자 생성 등 시스템 설정은 root 권한이 필요하다.
+```
+
+```bash
+# 패키지 업데이트 및 SSH 서버 설치
+apt update && apt install -y openssh-server sudo
+
+# 사용자 생성
+adduser codej625
+# New password: 원하는 비밀번호 입력
+# Retype new password: 재입력
+# 이후 Full Name 등 추가 정보는 Enter로 건너뜀
+
+# sudo 권한 부여
+usermod -aG sudo codej625
+
+# SSH 설정 (포트 8023)
+# Termux sshd는 8022, Ubuntu sshd는 8023으로 분리한다.
+echo "Port 8023" >> /etc/ssh/sshd_config
+
+# 호스트 키 생성 (없으면 sshd가 시작되지 않음)
+ssh-keygen -A
+
+# SSH 서버 실행
+/usr/sbin/sshd
+```
+
+<br />
+
+```
+PC에서 SSH 접속이 되는지 먼저 확인한다.
+
+Cursor 연결 전에 이 단계가 통과되어야 한다.
 ```
 
 ```zsh
-# git 설치
-pkg install -y git curl
+# PC에서
+ssh codej625@192.168.x.x -p 8023
+```
 
-# git 버전 확인
-git --version
+<br />
+<br />
+<br />
+
+7. Ubuntu 개발 환경 설정
+
+```
+이후 설정은 codej625 계정으로 진행한다.
+
+root로 설치하면 Cursor 접속 시 홈 디렉토리가 달라져서 설정이 꼬인다.
+```
+
+```bash
+# codej625 계정으로 전환
+su - codej625
+```
+
+```bash
+# 기본 도구 설치 (sudo 필요)
+sudo apt install -y git curl wget vim zsh build-essential libssl-dev python3
 
 # git config 설정
 git config --global user.name "codej625"
@@ -168,12 +221,200 @@ git config --global user.email "codej625@gmail.com"
 git config --global --list
 ```
 
-```zsh
-# 빌드 도구 (bcrypt 등 네이티브 모듈용) 설치
-pkg install -y clang make cmake openssl openssl-tool
+```bash
+# zsh + oh-my-zsh 설치 (Ubuntu 셸용)
+chsh -s $(which zsh)
+
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+```
+
+```bash
+# nvm 설치
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+
+# zshrc에 nvm 설정 추가
+cat >> ~/.zshrc << 'EOF'
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+EOF
+
+source ~/.zshrc
+
+# Node.js LTS 설치
+nvm install --lts
+
+# 버전 확인
+node -v
+npm -v
+```
+
+<br />
+<br />
+<br />
+
+8. Cursor Remote SSH 연결
+
+```
+PC에서 ~/.ssh/config 파일에 아래 내용을 추가한다.
+
+Android 기기의 IP는 Ubuntu 안에서 hostname -I 명령어로 확인한다.
+```
+
+```bash
+# Android IP 확인 (Ubuntu 안에서)
+hostname -I
+```
+
+```
+# PC의 ~/.ssh/config 에 추가
+Host android-server
+  HostName 192.168.x.x  # Android IP
+  User codej625
+  Port 8023
+```
+
+```
+Cursor에서
+Ctrl+Shift+P → Remote-SSH: Connect to Host → android-server 선택
+```
+
+<br />
+<br />
+<br />
+
+9. 매번 시작할 때
+
+```
+재부팅 또는 Termux 재시작 후에는 아래 한 줄만 실행하면 된다.
+
+폰에서 Termux 앱을 직접 열어서 실행해야 한다. (PC SSH 세션에서 실행하면 안 됨)
 ```
 
 ```zsh
-# 기타 설치
-pkg install -y wget vim python
+# Termux에서
+proot-distro login ubuntu -- /usr/sbin/sshd
+```
+
+```
+이후 Cursor에서 바로 접속 가능하다.
+```
+
+<br />
+<br />
+<br />
+
+10. 작업 디렉토리
+
+```
+workspace는 codej625 홈 디렉토리에 두는 것이 성능상 가장 유리하다.
+
+/sdcard/ 등 Android 파일시스템은 chmod, symlink 등이 제한되어
+Node.js 프로젝트에서 문제가 생길 수 있다.
+```
+
+```bash
+mkdir ~/workspace
+```
+
+<br />
+<br />
+<br />
+
+11. SSH 키 인증 설정 (선택)
+
+```
+매번 비밀번호 입력이 번거롭다면 SSH 키 인증을 설정한다.
+```
+
+```zsh
+# PC에서
+ssh-keygen -t ed25519
+ssh-copy-id -p 8023 codej625@192.168.x.x
+```
+
+<br />
+<br />
+<br />
+
+12. 트러블슈팅
+
+```
+오늘 실제로 겪었던 문제들과 해결 방법이다.
+
+원인과 해결방법으로 분류해놓았다.
+```
+
+<br />
+
+`Termux에 직접 Cursor SSH 연결 → 무한 로딩`
+
+```
+* 원인
+Cursor Server 바이너리가 glibc 기반인데 Termux는 bionic libc 사용
+
+* 해결
+proot Ubuntu 안에서 sshd 실행 후 Ubuntu로 접속 (이 가이드 방식)
+```
+
+<br />
+
+`Connection refused (포트 8023)`
+
+```
+* 원인
+Ubuntu sshd가 실행 중이 아님
+
+* 해결
+폰 Termux에서 proot-distro login ubuntu -- /usr/sbin/sshd 실행
+```
+
+<br />
+
+`sshd: no hostkeys available -- exiting`
+
+```
+* 원인
+SSH 호스트 키가 없음
+
+* 해결
+Ubuntu 안에서 ssh-keygen -A 실행 후 /usr/sbin/sshd 재시작
+```
+
+<br />
+
+`Couldn't install Cursor Server / Code server did not start`
+
+```
+* 원인
+Cursor Server 파일이 불완전하게 설치됨 (package.json, node_modules 누락)
+
+* 해결
+Ubuntu 안에서 아래 명령어로 수동 복구
+```
+
+```bash
+# commit ID는 Cursor > Help > About 에서 확인
+COMMIT_ID="81fcf2931d7687b4ff3f3017858d0c6dee7e2a60"
+
+cd ~/.cursor-server/bin/linux-arm64/$COMMIT_ID/
+
+# tar 전체 재추출
+tar -xzf cursor-server-*.tar.gz --strip-components=1
+
+# 서버 시작 테스트
+./bin/cursor-server --start-server 2>&1 | head -10
+# "Extension host agent started." 가 나오면 성공
+```
+
+<br />
+
+`pkill sshd 후 Termux SSH 연결 끊김`
+
+```
+* 원인
+Ubuntu sshd를 종료하면 현재 SSH 세션도 함께 끊김
+
+* 해결
+폰 Termux 앱에서 직접 proot-distro login ubuntu 후 sshd 재시작
 ```
