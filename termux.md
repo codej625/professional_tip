@@ -200,14 +200,13 @@ EOF
 ssh-keygen -A
 
 # sshd 시작
-pkill -f sshd 2>/dev/null || true
-service ssh restart
+sudo service ssh restart
 
 # 확인
 ps aux | grep sshd
 echo "Setup complete"
 
-# sshd 실행
+# sshd 실행 (sshd가 꺼져있으면)
 /usr/sbin/sshd
 ```
 
