@@ -227,7 +227,7 @@ ssh -p 8023 dev@192.168.0.11
 
 ```zsh
 # 기본 도구 설치
-sudo apt install -y curl wget vim zsh build-essential libssl-dev python3
+sudo apt install -y git curl wget vim zsh build-essential libssl-dev python3
 
 # git 전역 설정
 git config --global user.name "codej625"
