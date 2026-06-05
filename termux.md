@@ -201,7 +201,7 @@ EOF
 ssh-keygen -A
 
 # sshd 시작
-sudo service ssh restart
+sudo service ssh restart (root에서는 sudo 제외하고)
 
 # 확인
 ps aux | grep sshd
