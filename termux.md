@@ -100,6 +100,14 @@ Cursor 연결에는 사용하지 않는다. (Ubuntu sshd가 담당)
 ```
 
 ```zsh
+# sshd
+pkg install openssl
+
+# 비밀번호 생성
+passwd
+
+# 이후 sshd 를 터미널에 명령하고 원격으로 붙어서 작업
+
 # 기본 세팅
 pkg update && pkg upgrade -y
 pkg install -y openssh proot-distro
