@@ -179,6 +179,9 @@ proot-distro login ubuntu
 apt update && apt upgrade -y
 apt install openssh-server sudo -y
 
+# 필수 네트워크 도구 설치
+apt install iproute2 -y
+
 # root 비밀번호 설정
 passwd root
 
