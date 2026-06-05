@@ -129,14 +129,17 @@ termux-setup-storage
 ```zsh
 # zsh 설치 (선택)
 pkg install -y zsh
+
+# 기본 쉘을 zsh로 변경
 chsh -s zsh
 
-# Termux 재시작 -> 선택화면이 나오면 0번 선택 (~/.zshrc 생성)
+# Termux 재시작
+# 처음 켤 때 선택 화면이 나오면 0번을 입력하여 ~/.zshrc 파일을 생성
 
-# oh-my-zsh 설치
+# 3. oh-my-zsh 설치
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-# 쉘 새로고침
+# 4. 쉘 환경 설정 새로고침
 source ~/.zshrc
 ```
 
