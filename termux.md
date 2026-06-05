@@ -65,3 +65,21 @@ adb shell "settings put global settings_enable_monitor_phantom_procs false"
 
 마지막으로 Termux 앱을 완전히 종료(강제 중지 또는 최근 앱 목록에서 제거)한 후 다시 실행한다.
 ```
+
+<br />
+<br />
+<br />
+
+3. 성공 확인
+
+```zsh
+# 팬텀 프로세스 제한 수치 확인
+adb shell "device_config get activity_manager max_phantom_processes"
+# 출력값 2147483647 나오면 성공
+```
+
+```zsh
+# 모니터링 비활성화 확인
+adb shell "settings get global settings_enable_monitor_phantom_procs"
+# 출력값 false 나오면 성공
+```
