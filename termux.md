@@ -136,7 +136,10 @@ chsh -s zsh
 # Termux 재시작
 # 처음 켤 때 선택 화면이 나오면 0번을 입력하여 ~/.zshrc 파일을 생성
 
-# 3. oh-my-zsh 설치
+# 깃 설치
+pkg install -y git
+
+# oh-my-zsh 설치
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # 4. 쉘 환경 설정 새로고침
@@ -224,7 +227,7 @@ ssh -p 8023 dev@192.168.0.11
 
 ```zsh
 # 기본 도구 설치
-sudo apt install -y git curl wget vim zsh build-essential libssl-dev python3
+sudo apt install -y curl wget vim zsh build-essential libssl-dev python3
 
 # git 전역 설정
 git config --global user.name "codej625"
