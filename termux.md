@@ -170,7 +170,7 @@ git config --global --list
 
 ```zsh
 # 빌드 도구 (bcrypt 등 네이티브 모듈용) 설치
-pkg install -y clang make cmake openssl
+pkg install -y clang make cmake openssl openssl-tool
 ```
 
 ```zsh
