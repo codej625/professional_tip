@@ -188,7 +188,6 @@ Port 8023
 PermitRootLogin yes
 PasswordAuthentication yes
 AllowUsers root dev
-UsePrivilegeSeparation no
 EOF
 
 # HostKey 생성
