@@ -347,6 +347,9 @@ pg_ctl -D $PREFIX/var/lib/postgresql start
 # postgres 접속
 psql -U $(whoami) -d postgres
 
+# 접속이 혹시 안 되면
+psql -h 127.0.0.1 -p 5432 -U $(whoami) -d postgres
+
 # 유저 생성
 CREATE USER 아이디명 WITH PASSWORD '비밀번호';
 
