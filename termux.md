@@ -107,6 +107,9 @@ passwd
 # 리모트 접속을 위해
 sshd
 
+# Android 내부 저장소 접근 권한 부여
+termux-setup-storage
+
 # proot-distro 설치
 pkg install proot-distro -y
 
@@ -121,9 +124,6 @@ pkg install proot-distro -y
 # 복구
 mv /data/data/com.termux/files/usr/bin/py3compile.bak /data/data/com.termux/files/usr/bin/py3compile
 mv /data/data/com.termux/files/usr/bin/py3clean.bak /data/data/com.termux/files/usr/bin/py3clean
-
-# Android 내부 저장소 접근 권한 부여
-termux-setup-storage
 ```
 
 ```zsh
