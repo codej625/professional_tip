@@ -240,14 +240,14 @@ EOF
 # oh-my-zsh 설치
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-# 현재 기본 쉘이 뭔지 확인
-echo $SHELL
-
 # zsh가 제대로 설치됐는지
 which zsh
 
-# 쉘 환경 설정 새로고침
-source ~/.zshrc
+# zsh 실행
+zsh
+
+# 현재 기본 쉘이 뭔지 확인
+echo $SHELL
 ```
 
 ```zsh
