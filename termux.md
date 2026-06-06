@@ -215,7 +215,7 @@ ssh -p 2222 root@192.168.0.11
 
 ```zsh
 # 기본 도구 설치
-sudo apt install -y git curl wget vim zsh build-essential libssl-dev python3
+sudo apt install -y git curl wget vim build-essential libssl-dev python3
 
 # git 전역 설정
 git config --global user.name "codej625"
@@ -227,7 +227,15 @@ git config --global --list
 
 ```zsh
 # zsh 설치
-chsh -s $(which zsh)
+apt install zsh
+
+# 기본 쉘을 zsh로 변경 (PRoot 환경 호환성 설정)
+cat >> /etc/profile << 'EOF'
+if [ -x /data/data/com.termux/files/usr/bin/zsh ]; then
+    export SHELL=/data/data/com.termux/files/usr/bin/zsh
+    exec /data/data/com.termux/files/usr/bin/zsh -l
+fi
+EOF
 
 # oh-my-zsh 설치
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
