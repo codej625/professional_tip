@@ -265,6 +265,7 @@ Node.js 프로젝트에서 문제가 생길 수 있다.
 ```
 
 ```zsh
-# termux -> ubuntu으로 login을 해줘야 외부에서 ubuntu으로 접속이 가능
+# termux 에서 ubuntu으로 login을 해줘야 외부에서 ubuntu으로 접속이 가능
 proot-distro login ubuntu
+dropbear -p 2222 -F -E
 ```
