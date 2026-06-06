@@ -364,7 +364,7 @@ psql -h IP입력 -p 5432 -U 아이디명 -d 데이터베이스명
 vim ~/.bashrc
 
 # 열리면 맨 아래에 추가
-bashpg_ctl -D $PREFIX/var/lib/postgresql start
+pg_ctl -D $PREFIX/var/lib/postgresql start
 
 # 바로 적용
 bashsource ~/.bashrc
@@ -375,7 +375,7 @@ bashsource ~/.bashrc
 vim ~/.zshrc
 
 # 열리면 맨 아래에 추가
-bashpg_ctl -D $PREFIX/var/lib/postgresql start
+pg_ctl -D $PREFIX/var/lib/postgresql start
 
 # 바로 적용
 source ~/.zshrc
