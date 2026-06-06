@@ -363,8 +363,11 @@ psql -h IP입력 -p 5432 -U 아이디명 -d 데이터베이스명
 # bash 버전
 vim ~/.bashrc
 
-# 열리면 맨 아래에 추가
+# 열리면 맨 아래에 추가 (옵션 1)
 pg_ctl -D $PREFIX/var/lib/postgresql start
+
+# 혹은 서버가 실행 중이면 스킵, 꺼져있으면 실행 - 둘 중 하나만 적용 (옵션 2)
+pg_ctl -D $PREFIX/var/lib/postgresql status | grep -q "server is running" || pg_ctl -D $PREFIX/var/lib/postgresql start
 
 # 바로 적용
 bashsource ~/.bashrc
@@ -374,8 +377,11 @@ bashsource ~/.bashrc
 # zsh 버전
 vim ~/.zshrc
 
-# 열리면 맨 아래에 추가
+# 열리면 맨 아래에 추가 (옵션 1)
 pg_ctl -D $PREFIX/var/lib/postgresql start
+
+# 혹은 서버가 실행 중이면 스킵, 꺼져있으면 실행 - 둘 중 하나만 적용 (옵션 2)
+pg_ctl -D $PREFIX/var/lib/postgresql status | grep -q "server is running" || pg_ctl -D $PREFIX/var/lib/postgresql start
 
 # 바로 적용
 source ~/.zshrc
