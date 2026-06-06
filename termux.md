@@ -107,7 +107,7 @@ passwd
 # 리모트 접속을 위해
 sshd
 
-# Android 내부 저장소 접근 권한 부여
+# android 내부 저장소 접근 권한 부여
 termux-setup-storage
 
 # proot-distro 설치
@@ -133,7 +133,7 @@ pkg install -y zsh
 # 기본 쉘을 zsh로 변경
 chsh -s zsh
 
-# Termux 재시작
+# termux 재시작
 # 처음 켤 때 선택 화면이 나오면 0번을 입력하여 ~/.zshrc 파일을 생성
 
 # 깃 설치
@@ -162,10 +162,10 @@ proot-distro로 Ubuntu 환경을 구성해 이 문제를 해결한다.
 ```
 
 ```zsh
-# Ubuntu 설치
+# ubuntu 설치
 proot-distro install ubuntu
 
-# Ubuntu 진입
+# ubuntu 진입
 proot-distro login ubuntu
 ```
 
@@ -179,9 +179,11 @@ proot-distro login ubuntu
 # 패키지 저장소 업데이트 및 업그레이드
 apt update && apt upgrade -y
 
-# 기존 충돌 패키지 정리 및 Dropbear(경량 SSH) 설치
+# 기존 충돌 패키지 정리
 apt remove --purge openssh-server -y
 apt autoremove -y
+
+# dropbear(경량 SSH) 설치
 apt install dropbear -y
 
 # 필수 네트워크 도구 설치
@@ -244,7 +246,7 @@ EOF
 
 source ~/.zshrc
 
-# Node.js LTS 설치 및 버전 확인
+# node.js lts 설치 및 버전 확인
 nvm install --lts
 node -v && npm -v
 ```
