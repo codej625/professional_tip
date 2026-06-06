@@ -176,51 +176,39 @@ proot-distro login ubuntu
 6. Ubuntu 초기 설정
 
 ```zsh
+# 패키지 저장소 업데이트 및 업그레이드
 apt update && apt upgrade -y
-apt install openssh-server sudo -y
+
+# 기존 충돌 패키지 정리 및 Dropbear(경량 SSH) 설치
+apt remove --purge openssh-server -y
+apt autoremove -y
+apt install dropbear -y
 
 # 필수 네트워크 도구 설치
 apt install iproute2 -y
 
-# root 비밀번호 설정
+# root 최고 관리자 비밀번호 설정 (Cursor 접속 시 사용)
 passwd root
 
-# 일반 사용자 계정 생성 (원하는 이름으로 변경 가능, 예시 -> dev)
-adduser dev
+# 우분투 시작 시 2222 포트로 자동 실행되도록 .zshrc에 등록
+cat >> ~/.zshrc << 'EOF'
 
-# sudo 권한 주기 (선택)
-usermod -aG sudo dev
-
-# SSH 설정 (root 허용 + dev 계정도 허용)
-cat >> /etc/ssh/sshd_config << EOF
-Port 8023
-PermitRootLogin yes
-PasswordAuthentication yes
-AllowUsers root dev
-UsePAM no
+## Start Dropbear SSH server automatically
+if ! ps aux | grep -v grep | grep -q "dropbear -p 2222"; then
+    dropbear -p 2222
+fi
 EOF
 
+# 즉시 반영을 위해 zsh 환경 변수 적용
+source ~/.zshrc
 
-# HostKey 생성
-ssh-keygen -A
-
-# sshd 시작
-sudo service ssh restart (root에서는 sudo 제외하고)
-
-# 확인
-ps aux | grep sshd
-echo "Setup complete"
-
-# sshd 실행 (sshd가 꺼져있으면)
-/usr/sbin/sshd
+# Dropbear 수동 실행 테스트
+dropbear -p 2222 -F -E
 ```
 
 ```zsh
-# root로 테스트
-ssh -p 8023 root@192.168.0.11
-
-# dev 계정으로 테스트
-ssh -p 8023 dev@192.168.0.11
+# root로 테스트 (예시)
+ssh -p 2222 root@192.168.0.11
 ```
 
 <br />
@@ -277,7 +265,7 @@ node -v && npm -v
 <br />
 <br />
 
-8. 작업 디렉토리
+8. 작업 디렉토리 및 실행
 
 ```
 workspace는 codej625 홈 디렉토리에 두는 것이 성능상 가장 유리하다.
@@ -287,5 +275,6 @@ Node.js 프로젝트에서 문제가 생길 수 있다.
 ```
 
 ```zsh
-mkdir ~/workspace
+# termux -> ubuntu으로 login을 해줘야 외부에서 ubuntu으로 접속이 가능
+proot-distro login ubuntu
 ```
