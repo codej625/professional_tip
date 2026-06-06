@@ -190,30 +190,6 @@ apt install iproute2 -y
 # root 최고 관리자 비밀번호 설정 (Cursor 접속 시 사용)
 passwd root
 
-# 우분투 기본 로그인 쉘을 zsh로 강제 고정
-chsh -s /bin/zsh root
-
-# 우분투 시작 시 2222 포트로 자동 실행되도록 .zshrc에 등록
-cat >> ~/.zshrc << 'EOF'
-
-# BASH 환경 등록 (Backup)
-cat >> ~/.bashrc << 'EOF'
-
-## Start Dropbear SSH server automatically (Backup)
-if ! ps aux | grep -v grep | grep -q "dropbear -p 2222"; then
-    dropbear -p 2222
-fi
-EOF
-
-## Start Dropbear SSH server automatically
-if ! ps aux | grep -v grep | grep -q "dropbear -p 2222"; then
-    dropbear -p 2222
-fi
-EOF
-
-# 즉시 반영을 위해 zsh 환경 변수 적용
-source ~/.zshrc
-
 # Dropbear 수동 실행 테스트
 dropbear -p 2222 -F -E
 ```
