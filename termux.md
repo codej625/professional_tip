@@ -130,6 +130,10 @@ pkg install -y build-essential openssl python
 # node 버전 관리자 (n) 설치
 npm install -g n
 
+# N_PREFIX 설정 (.bashrc 또는 .zshrc에 추가)
+echo 'export N_PREFIX=$PREFIX' >> ~/.bashrc
+source ~/.bashrc
+
 # 버전 설치 및 전환 (설치 + 전환 동시)
 # n 18        Node 18 설치 + 전환
 # n 20        Node 20 설치 + 전환
@@ -397,7 +401,7 @@ psql -h IP입력 -p 5432 -U 아이디명 -d 데이터베이스명
 ```zsh
 # termux 재실행 시 자동 시작하기
 
-# bash 버전
+# 쉘 설정 열기 (.bashrc 또는 .zshrc에 추가)
 vim ~/.bashrc
 
 # 열리면 맨 아래에 추가 (옵션 1)
@@ -406,22 +410,8 @@ pg_ctl -D $PREFIX/var/lib/postgresql start
 # 혹은 서버가 실행 중이면 스킵, 꺼져있으면 실행 - 둘 중 하나만 적용 (옵션 2)
 pg_ctl -D $PREFIX/var/lib/postgresql status | grep -q "server is running" || pg_ctl -D $PREFIX/var/lib/postgresql start
 
-# 바로 적용
+# 바로 적용 (zsh는 source ~/.zshrc)
 bashsource ~/.bashrc
-
-===============================================
-
-# zsh 버전
-vim ~/.zshrc
-
-# 열리면 맨 아래에 추가 (옵션 1)
-pg_ctl -D $PREFIX/var/lib/postgresql start
-
-# 혹은 서버가 실행 중이면 스킵, 꺼져있으면 실행 - 둘 중 하나만 적용 (옵션 2)
-pg_ctl -D $PREFIX/var/lib/postgresql status | grep -q "server is running" || pg_ctl -D $PREFIX/var/lib/postgresql start
-
-# 바로 적용
-source ~/.zshrc
 ```
 
 ```zsh
