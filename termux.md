@@ -422,7 +422,7 @@ bashsource ~/.bashrc
 ```
 
 ```zsh
-# 서버 작동 명령어 모음
+# 데이터베이스 서버 작동 명령어 모음
 
 # 서버 시작
 pg_ctl -D $PREFIX/var/lib/postgresql start
@@ -432,6 +432,18 @@ pg_ctl -D $PREFIX/var/lib/postgresql restart
 
 # 서버 종료
 pg_ctl -D $PREFIX/var/lib/postgresql stop
+
+# 덤프 개별
+pg_dump -Fc 디비명 > backup.dump
+
+# 덤프 전체
+pg_dumpall | gzip > all_backup.sql.gz
+
+# 복원 개별
+pg_restore -d 디비명 backup.dump
+
+# 복원 전체
+gunzip -c all_backup.sql.gz | psql
 ```
 
 <br />
