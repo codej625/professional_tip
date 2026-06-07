@@ -127,6 +127,13 @@ pkg install -y git curl wget vim nodejs-lts
 # build-essential, libssl-dev, python3 대응
 pkg install -y build-essential openssl python
 
+# git 전역 설정
+git config --global user.name "아이디"
+git config --global user.email "메일"
+
+# 설정 확인
+git config --global --list
+
 # node 버전 관리자 (n) 설치
 npm install -g n
 
@@ -264,8 +271,8 @@ ssh -p 2222 root@192.168.0.11
 apt install -y git curl wget vim build-essential libssl-dev python3
 
 # git 전역 설정
-git config --global user.name "codej625"
-git config --global user.email "codej625@gmail.com"
+git config --global user.name "아이디"
+git config --global user.email "메일"
 
 # 설정 확인
 git config --global --list
