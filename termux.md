@@ -107,6 +107,9 @@ pkg update && pkg upgrade -y
 # android 내부 저장소 접근 권한 부여
 termux-setup-storage
 
+# ip addr 명령어로 아이피 확인
+pkg install iproute2
+
 # openssh 설치 (원격 접속을 위해)
 pkg install openssh
 
