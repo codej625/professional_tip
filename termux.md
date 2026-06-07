@@ -433,3 +433,22 @@ pg_ctl -D $PREFIX/var/lib/postgresql restart
 # 서버 종료
 pg_ctl -D $PREFIX/var/lib/postgresql stop
 ```
+
+<br />
+<br />
+<br />
+
+10. 기타
+
+```
+아래처럼 SHH 접속이 안 될 때 조치
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+```
+
+```zsh
+# ssh-keygen -R '[ip]:port' 입력 예시
+ssh-keygen -R '[192.168.0.11]:8022'
+```
