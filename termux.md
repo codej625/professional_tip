@@ -163,7 +163,7 @@ chsh -s zsh
 # termux 재시작
 # 처음 켤 때 선택 화면이 나오면 0번을 입력하여 ~/.zshrc 파일을 생성
 
-# 깃 설치
+# 깃 설치 (위에서 설치 안 했을 시)
 pkg install -y git
 
 # oh-my-zsh 설치
