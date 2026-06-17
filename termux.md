@@ -515,7 +515,7 @@ rsync -avz \
   --exclude .env \
   -e "ssh -p <SSH_PORT>" \
   ~/workspace/<REPO>/ \
-  <PHONE_IP>:~/workspace/<REPO>/
+  <IP>:~/workspace/<REPO>/
 ```
 
 <br />
@@ -531,7 +531,7 @@ rsync -avz \
   --exclude .env \
   -e "ssh -p 8022" \
   ~/workspace/money_board/ \
-  192.168.0.3:~/workspace/money_board/
+  <IP>:~/workspace/money_board/
 echo "Termux 동기화 완료"
 ```
 
