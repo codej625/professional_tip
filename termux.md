@@ -492,7 +492,7 @@ pkg install rsync
 
 ```zsh
 # 맥에서는 기본으로 rsync 설치됨
-brew install fswatch   # 파일 변경 자동 감지용
+brew install fswatch # 파일 변경 자동 감지용
 
 # 이후 프로젝트 클론
 ```
@@ -532,12 +532,12 @@ rsync -avz \
   -e "ssh -p 8022" \
   ~/workspace/money_board/ \
   192.168.0.3:~/workspace/money_board/
-echo "✓ Termux 동기화 완료"
+echo "Termux 동기화 완료"
 ```
 
 ```zsh
 chmod +x ~/workspace/sync-to-termux.sh
-~/workspace/sync-to-termux.sh          # 수동 동기화
+~/workspace/sync-to-termux.sh # 수동 동기화
 ```
 
 ```zsh
@@ -553,7 +553,9 @@ alias syncphone='~/workspace/sync-to-termux.sh'
 alias watchphone='fswatch -o ~/workspace/money_board | xargs -n1 ~/workspace/sync-to-termux.sh'
 
 source ~/.zshrc # 적용
-watchphone      # 자동 감지 시작 (종료: Ctrl+C)
+watchphone      # 자동 감지 시작
+
+pkill -f fswatch # 종료
 ```
 
 <br />
