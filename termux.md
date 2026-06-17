@@ -553,9 +553,20 @@ alias syncphone='~/workspace/sync-to-termux.sh'
 alias watchphone='fswatch -o ~/workspace/money_board | xargs -n1 ~/workspace/sync-to-termux.sh'
 
 source ~/.zshrc # 적용
-watchphone      # 자동 감지 시작
+watchphone # 자동 감지 시작
 
 pkill -f fswatch # 종료
+```
+
+```zsh
+# 매 번 비밀번호를 입력할수 없으니 SSH 키로 인증한다. (맥)
+ssh-keygen -t rsa -b 4096
+
+# termux에 공개키를 키를 복사해준다.
+ssh-copy-id -p <PORT> <IP>
+
+# 접속 테스트
+ssh -p <PORT> <IP>
 ```
 
 <br />
