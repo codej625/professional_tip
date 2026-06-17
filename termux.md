@@ -450,7 +450,117 @@ gunzip -c all_backup.sql.gz | psql
 <br />
 <br />
 
-10. 기타
+10. proot-distro 오버헤드 문제 해결 (편법?)
+
+```
+proot-distro 를 사용해서 ubuntu를 사용하면 오버헤드 문제가 반드시 생긴다.
+
+하지만 cursor Remote를 termux에는 바로 붙일 수 있는 방법이 없어서
+rsync를 사용해서 코드를 동기화하고 cursor를 사용하는 방법을 공유해본다.
+```
+
+<br />
+
+`기본 구조`
+
+```
+맥 -> cursor (코드 수정, 파일 검색, AI)
+    |
+    | rsync (코드 동기화)
+    |
+termux (npm run dev -> 개발 서버)
+    |
+    |
+    |
+맥 브라우저 -> http://<termux 아이피>:3000
+```
+
+<br />
+
+`termux`
+
+```zsh
+pkg update
+pkg install rsync
+
+# 이후 프로젝트 클론
+```
+
+<br />
+
+`mac`
+
+```zsh
+# 맥에서는 기본으로 rsync 설치됨
+brew install fswatch   # 파일 변경 자동 감지용
+
+# 이후 프로젝트 클론
+```
+
+<br />
+
+`파일 동기화`
+
+```
+파일을 동기화 시킬것이기 때문에
+termux 서버에서는 dev 서버를 실행시킨다.
+```
+
+```zsh
+# 연결 예시 (맥에서)
+rsync -avz \
+  --exclude node_modules \
+  --exclude .next \
+  --exclude .git \
+  --exclude .env \
+  -e "ssh -p <SSH_PORT>" \
+  ~/workspace/<REPO>/ \
+  <PHONE_IP>:~/workspace/<REPO>/
+```
+
+<br />
+
+`스크립트 만들기`
+
+```zsh
+#!/bin/bash
+rsync -avz \
+  --exclude node_modules \
+  --exclude .next \
+  --exclude .git \
+  --exclude .env \
+  -e "ssh -p 8022" \
+  ~/workspace/money_board/ \
+  192.168.0.3:~/workspace/money_board/
+echo "✓ Termux 동기화 완료"
+```
+
+```zsh
+chmod +x ~/workspace/sync-to-termux.sh
+~/workspace/sync-to-termux.sh          # 수동 동기화
+```
+
+```zsh
+# 자동 동기화 (저장할 때마다 rsync 실행)
+fswatch -o ~/workspace/money_board | xargs -n1 ~/workspace/sync-to-termux.sh
+```
+
+```zsh
+# alias 만들기 ~/.zshrc 에 추가 (선택)
+
+# 맨 마지막에 추가하고 저장
+alias syncphone='~/workspace/sync-to-termux.sh'
+alias watchphone='fswatch -o ~/workspace/money_board | xargs -n1 ~/workspace/sync-to-termux.sh'
+
+source ~/.zshrc # 적용
+watchphone      # 자동 감지 시작 (종료: Ctrl+C)
+```
+
+<br />
+<br />
+<br />
+
+11. 기타
 
 ```
 아래처럼 SHH 접속이 안 될 때 조치
