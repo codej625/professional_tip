@@ -129,7 +129,7 @@ sshd
 
 <br />
 
-`termux 만 사용 시 (선택)`
+`termux 만 사용 시 개발 도구 설치 (선택)`
 
 ```zsh
 # 개발 도구 설치
@@ -200,6 +200,16 @@ which zsh
 
 # 쉘 환경 설정 새로고침
 source ~/.zshrc
+```
+
+```zsh
+# Next를 사용한다면 안드로이드용 터보 팩 설치 (Next 버전 확인해야 함 패키지와 버전 동기화 필요)
+pkg install turbopack
+
+# 바로 적용
+source /data/data/com.termux/files/usr/etc/profile.d/turbopack.sh
+# 출력 되는 결과가 있으면 성공
+echo $NEXT_TEST_NATIVE_DIR
 ```
 
 <br />
@@ -377,7 +387,7 @@ dropbear -p 2222 -F -E
 <br />
 <br />
 
-4. 데이터베이스 서비스 만들기
+4. 데이터베이스 서버 만들기
 
 ```
 예시에서 데이터베이스 서버는 postgres를 사용한다.
