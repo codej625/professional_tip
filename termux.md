@@ -656,9 +656,13 @@ chmod +x ~/<PATH>/sync-to-termux.sh
 # vim ~/.zshrc
 
 # 한 번 수동 실행
-alias syncphone='~/workspace/sync-to-termux.sh'
+alias syncreponame='~/workspace/repo/sync-to-termux.sh'
 # 싱크 감지 자동 실행
-alias watchphone='fswatch -o ~/workspace/money_board | xargs -n1 ~/workspace/sync-to-termux.sh'
+alias watchreponame='fswatch -o ~/workspace/repo | xargs -n1 ~/workspace/repo/sync-to-termux.sh'
+
+# 워크스페이스 통합 스크립트트 실행 시 사용 (위에 두 개는 사용 안 함)
+alias sync='~/workspace/sync-to-termux.sh'
+alias watch='fswatch -o ~/workspace/ | xargs -n1 ~/workspace/sync-to-termux.sh'
 
 # 쉘에 변경 내용 적용
 source ~/.zshrc
