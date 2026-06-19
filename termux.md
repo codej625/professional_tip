@@ -203,7 +203,7 @@ source ~/.zshrc
 ```
 
 ```zsh
-# Next를 사용한다면 안드로이드용 터보 팩 설치 (Next 버전 확인해야 함 패키지와 버전 동기화 필요)
+# Next 사용 시 안드로이드용 터보 팩 문제 해결 (Next 버전 확인해야 함 패키지와 버전 동기화 필요)
 pkg install turbopack
 
 # 터보 팩 경로 찾기
@@ -217,6 +217,40 @@ source /data/data/com.termux/files/usr/etc/profile.d/turbopack.sh
 
 # 출력 되는 결과가 있으면 성공
 echo $NEXT_TEST_NATIVE_DIR
+```
+
+```zsh
+# Next 사용 시 Termux sharp 문제 해결
+
+# 사전 빌드 바이너리 없음 -> require 실패
+node -e "require('sharp')"
+
+# 소스 빌드 도구
+npm install --save-dev node-addon-api node-gyp
+
+# libvips 버전 확인 (≥ 8.18.3)
+pkg-config --modversion vips-cpp
+
+# sharp 디렉터리에서 빌드
+cd node_modules/sharp
+npm run build
+
+# pkg-config xproto
+pkg install xorgproto
+
+# gyp android NDK 변수 우회
+mkdir -p ~/.gyp
+echo "{'variables':{'android_ndk_path':''}}" > ~/.gyp/include.gypi
+
+# 재빌드 → gyp info ok
+npm run build
+
+# 로드 확인
+node -e "require('sharp'); console.log('sharp ok')"
+
+# Next dev 확인
+cd ~/workspace/rad./front-end
+npm run dev
 ```
 
 <br />
