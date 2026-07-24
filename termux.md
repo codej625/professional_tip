@@ -772,3 +772,20 @@ ssh-keygen -R '[192.168.0.11]:8022'
 # [] 안에 아이피를 넣는 이유는
 # 비표준 포트(8022)를 쓰면 known_hosts에는 보통 [192.168.0.11]:8022 이렇게 저장
 ```
+
+<br />
+
+`ssh으로 접속 시, localhost 접속 문제`
+
+```
+termux 접속 config를 밑에 와 같이 설정해두면
+ssh으로 접속해도 localhost으로 내부서버에 접속 가능하다.
+```
+
+```
+Host termux
+    HostName healthapp.shop
+    Port 8022
+    User codej625
+    LocalForward 3000 localhost:3000
+```
