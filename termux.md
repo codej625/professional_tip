@@ -605,8 +605,6 @@ Mac 이 소스 기준이고 termux 가 대상이다. (단방향)
 
 <br />
 
-`맥에서 스크립트 만들기 (~/workspace/sync-to-termux.sh 생성)`
-
 ```zsh
 #!/bin/zsh
 
@@ -626,7 +624,9 @@ if [[ -z "$PROJECT" ]]; then
 fi
 
 MAC_ROOT="$HOME/workspace"
-TERMUX_ROOT="termux:~/workspace"
+# 직접 지정 (Host termux 안 씀 → LocalForward 안 탐)
+TERMUX_PORT="<PORT>"                 # 예: 8022
+TERMUX_ROOT="<USER>@<IP>:~/workspace" # 예: codej625@192.168.0.14:~/workspace
 
 if [[ "$PROJECT" == "all" ]]; then
   SRC="$MAC_ROOT/"
@@ -697,12 +697,10 @@ RSYNC_EXCLUDES+=(--exclude .coverage)
 # docker volume 바인드 마운트 (폴더명이 다르면 아래에 --exclude 한 줄씩 추가)
 RSYNC_EXCLUDES+=(--exclude docker-data)
 
-# SSH config에 Host termux 가 있으면 -e ssh 로 충분
-# 직접 지정하려면: -e "ssh -p <PORT>"
-# MAC_PATH / termux_PATH 는 workspace 로 맞추고, 인자는 프로젝트 폴더명만 넘김
+# MAC_PATH / TERMUX_PATH 는 workspace 로 맞추고, 인자는 프로젝트 폴더명만 넘김
 rsync -avz --delete \
   "${RSYNC_EXCLUDES[@]}" \
-  -e ssh \
+  -e "ssh -p ${TERMUX_PORT}" \
   "$SRC" \
   "$DEST"
 
