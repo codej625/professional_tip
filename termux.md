@@ -82,14 +82,14 @@ adb shell "settings get global settings_enable_monitor_phantom_procs"
 <br />
 <br />
 
-2. Termux 초기 설정
+2. termux 초기 설정
 
 ```
-Termux는 proot Ubuntu를 실행하기 위한 부트스트랩 역할만 한다.
+termux는 proot Ubuntu를 실행하기 위한 부트스트랩 역할만 한다.
 
-git, node, nvm 등 개발 도구는 Termux가 아니라 Ubuntu 안에 설치한다.
+git, node, nvm 등 개발 도구는 termux가 아니라 Ubuntu 안에 설치한다.
 
-Termux openssh는 패키지 의존성으로 함께 설치되지만,
+termux openssh는 패키지 의존성으로 함께 설치되지만,
 Cursor 연결에는 사용하지 않는다. (호환성 때문에 Ubuntu 에서는 dropbear 사용)
 ```
 
@@ -220,7 +220,7 @@ echo $NEXT_TEST_NATIVE_DIR
 ```
 
 ```zsh
-# Next 사용 시 Termux sharp 문제 해결
+# Next 사용 시 termux sharp 문제 해결
 
 # 사전 빌드 바이너리 없음 -> require 실패
 node -e "require('sharp')"
@@ -242,7 +242,7 @@ pkg install xorgproto
 mkdir -p ~/.gyp
 echo "{'variables':{'android_ndk_path':''}}" > ~/.gyp/include.gypi
 
-# 재빌드 → gyp info ok
+# 재빌드 -> gyp info ok
 npm run build
 
 # 로드 확인
@@ -262,12 +262,12 @@ npm run dev
 ```
 Cursor, VSC Remote SSH는 glibc 기반 바이너리를 사용한다.
 
-Termux는 Android의 bionic libc를 사용하기 때문에 직접 연결이 불가능하다.
-(Termux에 SSH로 연결하면 비밀번호 입력 후 무한 로딩이 걸리는 것이 정상)
+termux는 Android의 bionic libc를 사용하기 때문에 직접 연결이 불가능하다.
+(termux에 SSH로 연결하면 비밀번호 입력 후 무한 로딩이 걸리는 것이 정상)
 
 proot-distro로 Ubuntu 환경을 구성해 이 문제를 해결한다.
 
-* Termux 안에서 실행을 전제로 함
+* termux 안에서 실행을 전제로 함
 ```
 
 <br />
@@ -433,7 +433,7 @@ dropbear -p 2222 -F -E
 ```
 예시에서 데이터베이스 서버는 postgres를 사용한다.
 
-2번 Termux 초기 설정과 공통사항까지만 설치하고 proot-distro는 필요없다.
+2번 termux 초기 설정과 공통사항까지만 설치하고 proot-distro는 필요없다.
 ```
 
 <br />
@@ -547,7 +547,7 @@ gunzip -c all_backup.sql.gz | psql
 ```
 proot-distro 를 사용해서 ubuntu를 사용하면 오버헤드 문제가 반드시 생긴다.
 
-하지만 Cursor Remote를 termux에는 바로 붙일 수 있는 방법이 없어
+하지만 Cursor Remote를 termux에는 바로 붙일 수 있는 방법이 없어  
 rsync를 사용해 코드를 동기화하는 방법을 공유해본다.
 ```
 
@@ -556,16 +556,18 @@ rsync를 사용해 코드를 동기화하는 방법을 공유해본다.
 `기본 구조`
 
 ```
-맥 -> cursor (코드 수정, 파일 검색, AI)
-    |
-    | -> rsync (코드 동기화)
-    |
-termux (npm run dev -> 개발 서버 실행)
-    |
-    |
-    |
-맥 브라우저 -> http://<TERMUX_IP>:<PORT>
+맥
+|
+| -> rsync (코드 동기화)
+|
+termux (npm run dev -> 개발 서버 실행) -> 맥 브라우저 (http://<termux_IP>:<PORT>)
 ```
+
+| 구분         | 경로                             |
+|-------------|---------------------------------|
+| Mac         | `~/workspace/<PROJECT>/`        |
+| termux      | `~/workspace/<PROJECT>/`        |
+| 스크립트(로컬) | `~/workspace/sync-to-termux.sh` |
 
 <br />
 
@@ -574,13 +576,9 @@ termux (npm run dev -> 개발 서버 실행)
 ```zsh
 # 패키지 업데이트
 pkg update
-```
 
-```zsh
 # rsync 설치
 pkg install rsync
-
-# 이후 사용할 프로젝트 클론
 ```
 
 <br />
@@ -592,8 +590,6 @@ pkg install rsync
 
 # 파일 변경 자동 감지용으로 필요
 brew install fswatch
-
-# 이후 사용할 프로젝트 클론
 ```
 
 <br />
@@ -603,35 +599,57 @@ brew install fswatch
 ```
 파일을 동기화 시킬것이기 때문에,
 termux 에서는 dev 서버를 실행시킨다.
+
+Mac 이 소스 기준이고 termux 가 대상이다. (단방향)
 ```
 
 <br />
 
-`맥에서 스크립트 만들기 (sync-to-termux.sh)`
+`맥에서 스크립트 만들기 (~/workspace/sync-to-termux.sh 생성)`
 
 ```zsh
 #!/bin/zsh
 
-rsync -avz \
-  --exclude node_modules \
-  --exclude .next \
-  --exclude .git \
-  --exclude .env \
-  -e "ssh -p <SSH_PORT>" \
-  ~/<MAC_PATH>/<MAC_REPOSITORY>/ \
-  <TERMUX_IP>:~/<TERMUX_PATH>/<TERMUX_REPOSITORY>/
-  
-echo "termux sync completed"
-```
+# 사용:
+#   ./sync-to-termux.sh <PROJECT>
+#   ./sync-to-termux.sh all
+#
+# 예:
+#   ./sync-to-termux.sh rad. <- 프로젝트 이름
+#   ./sync-to-termux.sh all
 
-```zsh
-# 레포별이 아닌 워크스페이스 통합버전
+PROJECT="$1"
 
-#!/bin/zsh
+if [[ -z "$PROJECT" ]]; then
+  echo "usage: $0 <project>|all"
+  exit 1
+fi
+
+MAC_ROOT="$HOME/workspace"
+TERMUX_ROOT="termux:~/workspace"
+
+if [[ "$PROJECT" == "all" ]]; then
+  SRC="$MAC_ROOT/"
+  DEST="$TERMUX_ROOT/"
+else
+  SRC="$MAC_ROOT/$PROJECT/"
+  DEST="$TERMUX_ROOT/$PROJECT/"
+
+  if [[ ! -d "$MAC_ROOT/$PROJECT" ]]; then
+    echo "error: missing project: $MAC_ROOT/$PROJECT"
+    exit 1
+  fi
+
+  # 빈 소스로 --delete 하면 원격이 날아갈 수 있어서 중단
+  if [[ -z "$(ls -A "$MAC_ROOT/$PROJECT" 2>/dev/null)" ]]; then
+    echo "error: source is empty, abort: $MAC_ROOT/$PROJECT"
+    exit 1
+  fi
+fi
 
 RSYNC_EXCLUDES=()
 
-# npm 패키지 (mac/termux 바이너리 다름 → termux에서 npm install)
+# npm 패키지 (mac/termux 바이너리 다름 -> termux에서 npm install)
 RSYNC_EXCLUDES+=(--exclude node_modules)
 # next.js 빌드 캐시
 RSYNC_EXCLUDES+=(--exclude .next)
@@ -679,69 +697,89 @@ RSYNC_EXCLUDES+=(--exclude .coverage)
 # docker volume 바인드 마운트 (폴더명이 다르면 아래에 --exclude 한 줄씩 추가)
 RSYNC_EXCLUDES+=(--exclude docker-data)
 
-# MAC_PATH 와 TERMUX_PATH는 workspace으로 맞추면 편함 (안에 repository 저장)
+# SSH config에 Host termux 가 있으면 -e ssh 로 충분
+# 직접 지정하려면: -e "ssh -p <PORT>"
+# MAC_PATH / termux_PATH 는 workspace 로 맞추고, 인자는 프로젝트 폴더명만 넘김
 rsync -avz --delete \
   "${RSYNC_EXCLUDES[@]}" \
-  -e "ssh -p <PORT>" \
-  ~/<MAC_PATH>/ \
-  <TERMUX_IP>:~/<TERMUX_PATH>/
+  -e ssh \
+  "$SRC" \
+  "$DEST"
 
-echo "termux sync completed"
+echo "termux sync completed: $PROJECT"
 ```
 
 <br />
 
 ```zsh
 # 파일 권한 주기
-chmod +x ~/<PATH>/sync-to-termux.sh
+chmod +x ~/workspace/sync-to-termux.sh
 
-# 동기화 스크립트 실행
-~/<PATH>/sync-to-termux.sh
+# 동기화 스크립트 실행 (프로젝트명 인자 필수)
+# 예: ~/workspace/sync-to-termux.sh money-board
+~/workspace/sync-to-termux.sh <인자>
+
+# workspace 전체 동기화 (주의: --delete)
+~/workspace/sync-to-termux.sh all
 ```
 
 <br />
 
-`alias 설정 및 싱크 자동 감지 스크립트 ~/.zshrc 에 추가 (선택)`
+`alias 설정 및 싱크 자동 감지 스크립트 ~/.zshrc 에 추가`
 
 ```zsh
-# vim ~/.zshrc
+# vim ~/.zshrc 예시
 
-# 한 번 수동 실행
-alias syncreponame='~/workspace/repo/sync-to-termux.sh'
-# 싱크 감지 자동 실행
-alias watchreponame='fswatch -o ~/workspace/repo | xargs -n1 ~/workspace/repo/sync-to-termux.sh'
+# termux (프로젝트 단위 sync)
+alias sync_rad='~/workspace/sync-to-termux.sh rad.'
+alias watch_rad='fswatch -o ~/workspace/rad. | xargs -n1 ~/workspace/sync-to-termux.sh rad.'
 
-# 워크스페이스 통합 스크립트트 실행 시 사용 (위에 두 개는 사용 안 함)
-alias sync='~/workspace/sync-to-termux.sh'
-alias watch='fswatch -o ~/workspace/ | xargs -n1 ~/workspace/sync-to-termux.sh'
+alias sync_pro='~/workspace/sync-to-termux.sh pro-one'
+alias watch_pro='fswatch -o ~/workspace/pro-one | xargs -n1 ~/workspace/sync-to-termux.sh pro-one'
+
+alias sync_money='~/workspace/sync-to-termux.sh money-board'
+alias watch_money='fswatch -o ~/workspace/money-board | xargs -n1 ~/workspace/sync-to-termux.sh money-board'
+
+alias sync_all='~/workspace/sync-to-termux.sh all'
 
 # 쉘에 변경 내용 적용
 source ~/.zshrc
 
-# 자동 감지 시작 (터미널에서 alias 사용)
-watchphone
+# 자동 감지 시작
+watch_rad
 
 # 강제 종료
 pkill -f fswatch
+
+# xargs -n1 뒤에 스크립트와 인자를 같이 두면, fswatch 이벤트마다 sync-to-termux.sh rad. 형태로 실행된다.
 ```
 
 <br />
 
-`매 번 비밀번호를 입력할수 없으니 SSH 키로 인증한다. (맥에서)`
+`매 번 비밀번호를 입력할수 없으니 SSH 키로 인증한다. (맥에서 실행)`
 
 ```zsh
 # SSH KEY 생성
 ssh-keygen -t rsa -b 4096
-```
 
-```zsh
-# termux에 공개키를 키를 복사
-ssh-copy-id -p <TERMUX_PORT> <TERMUX_IP>
-```
+# termux에 공개키를 복사
+ssh-copy-id -p <termux_PORT> <termux_USER>@<termux_IP>
 
-```zsh
 # 접속 테스트 (맥에서)
-ssh -p <TERMUX_PORT> <TERMUX_IP>
+ssh -p <termux_PORT> <termux_USER>@<termux_IP>
+
+# 또는 ~/.ssh/config 에 Host termux 를 등록한 경우
+ssh termux
+```
+
+```sshconfig
+# `~/.ssh/config` 예시
+
+Host termux
+    HostName <termux_IP>
+    Port <termux_PORT>
+    User <termux_USER>
+    LocalForward 3000 localhost:3000
 ```
 
 <br />
