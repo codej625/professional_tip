@@ -659,6 +659,8 @@ RSYNC_EXCLUDES+=(--exclude out)
 RSYNC_EXCLUDES+=(--exclude dist)
 # git 히스토리
 RSYNC_EXCLUDES+=(--exclude .git)
+# Cursor 룰·설정 (맥 IDE/에이전트용 — Termux 런타임에 불필요)
+RSYNC_EXCLUDES+=(--exclude .cursor)
 # 테스트 커버리지
 RSYNC_EXCLUDES+=(--exclude coverage)
 # turborepo 캐시
