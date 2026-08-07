@@ -226,7 +226,7 @@ echo $NEXT_TEST_NATIVE_DIR
 node -e "require('sharp')"
 
 # 소스 빌드 도구
-npm install --save-dev node-addon-api node-gyp
+pkg install libvips pkg-config clang make
 
 # libvips 버전 확인 (≥ 8.18.3)
 pkg-config --modversion vips-cpp
