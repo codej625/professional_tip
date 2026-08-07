@@ -224,32 +224,36 @@ echo $NEXT_TEST_NATIVE_DIR
 
 # 사전 빌드 바이너리 없음 -> require 실패
 node -e "require('sharp')"
+# android/arm64용 sharp 사전 빌드가 없어서, Termux에서는 소스 빌드 필요
 
-# 소스 빌드 도구
-pkg install libvips pkg-config clang make
+# libvips(이미지 라이브러리) + gyp용 헤더
+pkg install -y libvips xorgproto
 
-# libvips 버전 확인 (≥ 8.18.3)
+# libvips가 잡히는지 확인 (버전 숫자 나오면 OK)
 pkg-config --modversion vips-cpp
 
-# sharp 디렉터리에서 빌드
-cd node_modules/sharp
-npm run build
-
-# pkg-config xproto
-pkg install xorgproto
-
-# gyp android NDK 변수 우회
+# node-gyp가 Android NDK 경로 찾을 때 깨지는 것 우회
 mkdir -p ~/.gyp
 echo "{'variables':{'android_ndk_path':''}}" > ~/.gyp/include.gypi
 
-# 재빌드 -> gyp info ok
-npm run build
+# 프로젝트로 이동
+cd ~/workspace/raddot-console/front-end
 
-# 로드 확인
+# postinstall(prebuilt 다운로드 등) 스킵하고 의존성만 설치
+npm install --ignore-scripts
+
+# sharp 소스 빌드에 쓰는 도구
+npm install --save-dev node-addon-api node-gyp --ignore-scripts
+
+# sharp 네이티브 바인딩 빌드
+cd node_modules/sharp
+npm run build
+cd ../..
+
+# 로드 확인 — sharp ok 나오면 성공
 node -e "require('sharp'); console.log('sharp ok')"
 
-# Next dev 확인
-cd ~/workspace/rad./front-end
+# Next 개발 서버
 npm run dev
 ```
 
