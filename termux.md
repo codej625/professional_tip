@@ -762,6 +762,11 @@ pkill -f fswatch
 # SSH KEY 생성
 ssh-keygen -t rsa -b 4096
 
+# Enter 어쩌고 나오면 전부 Enter 누른다.
+
+# 계정을 알기 위해 termux 접속
+whoami
+
 # termux에 공개키를 복사
 ssh-copy-id -p <termux_PORT> <termux_USER>@<termux_IP>
 
