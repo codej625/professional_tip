@@ -789,6 +789,9 @@ Host termux
     Port <termux_PORT>
     User <termux_USER>
     LocalForward 3000 localhost:3000
+    LocalForward 4000 localhost:4000
+
+# 3000은 next, 4000은 nest
 ```
 
 <br />
