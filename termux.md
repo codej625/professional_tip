@@ -45,12 +45,13 @@ adb devices
 ```
 
 ```zsh
-# 팬텀 프로세스 제한 무력화 (핵심)
-adb shell "/system/bin/device_config set_sync_disabled_for_tests persistent; /system/bin/device_config put activity_manager max_phantom_processes 2147483647"
-```
+# Doze/배터리 최적화 예외
+adb shell dumpsys deviceidle whitelist +com.termux
+adb shell cmd appops set com.termux RUN_IN_BACKGROUND allow
+adb shell cmd appops set com.termux RUN_ANY_IN_BACKGROUND allow
 
-```zsh
-# 팬텀 프로세스 모니터링 비활성화
+# 팬텀 프로세스 킬러 무력화
+adb shell "/system/bin/device_config set_sync_disabled_for_tests persistent; /system/bin/device_config put activity_manager max_phantom_processes 2147483647"
 adb shell "settings put global settings_enable_monitor_phantom_procs false"
 ```
 
@@ -67,15 +68,35 @@ adb shell "settings put global settings_enable_monitor_phantom_procs false"
 `성공 확인`
 
 ```zsh
-# 팬텀 프로세스 제한 수치 확인
-adb shell "device_config get activity_manager max_phantom_processes"
-# 출력값이 2147483647이면 성공
-```
+echo "--- Doze whitelist ---"
+adb shell dumpsys deviceidle whitelist | grep termux
+# 성공: user,com.termux,10149 처럼 termux가 포함된 줄이 출력됨
+# 실패: 아무것도 안 나옴 (빈 결과)
 
-```zsh
-# 모니터링 비활성화 확인
-adb shell "settings get global settings_enable_monitor_phantom_procs"
-# 출력값이 false이면 성공
+echo "--- appops: RUN_IN_BACKGROUND ---"
+adb shell cmd appops get com.termux RUN_IN_BACKGROUND
+# 성공: RUN_IN_BACKGROUND: allow
+# 실패: ignore 또는 deny
+
+echo "--- appops: RUN_ANY_IN_BACKGROUND ---"
+adb shell cmd appops get com.termux RUN_ANY_IN_BACKGROUND
+# 성공: RUN_ANY_IN_BACKGROUND: allow
+# 실패: ignore 또는 deny
+
+echo "--- phantom process limit ---"
+adb shell device_config get activity_manager max_phantom_processes
+# 성공: 2147483647
+# 실패: null 이나 작은 숫자 (예: 32, 2)
+
+echo "--- sync disabled for tests ---"
+adb shell device_config get_sync_disabled_for_tests
+# 성공: persistent
+# 실패: none
+
+echo "--- phantom monitor enabled ---"
+adb shell settings get global settings_enable_monitor_phantom_procs
+# 성공: false
+# 실패: true 또는 null
 ```
 
 <br />
