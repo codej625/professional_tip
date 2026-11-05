@@ -860,3 +860,14 @@ Host termux
     User codej625
     LocalForward 3000 localhost:3000
 ```
+
+<br />
+
+`adb 종료하기`
+
+```
+마지막으로 작업을 마치고,
+사용하지 않는 adb를 종료하기 위한 명령어를 실행한다.
+
+adb kill-server
+```
