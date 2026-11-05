@@ -37,6 +37,9 @@
 ```zsh
 # ADB(Android Debug Bridge) 설치
 brew install --cask android-platform-tools
+
+# 윈도우는 아래 명령어 실행
+winget install Google.PlatformTools
 ```
 
 ```zsh
